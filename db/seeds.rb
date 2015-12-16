@@ -9,3 +9,16 @@
   User.destroy_all
   will = User.create!(email: "will@will.com")
   frankie = User.create!(email: "frankie@frankie.com")
+
+  ShortenedUrl.destroy_all
+  short_url = ShortenedUrl.create_for_user_and_long_url!(will, "google.com")
+  short_url2 = ShortenedUrl.create_for_user_and_long_url!(frankie, "apple.com")
+  short_url3 = ShortenedUrl.create_for_user_and_long_url!(frankie, "yahoo.com")
+  # short_url4 = ShortenedUrl.create_for_user_and_long_url!(will, "apple.com")
+
+  Visit.destroy_all
+  visit1 = Visit.record_visit!(will, short_url)
+  visit2 = Visit.record_visit!(frankie, short_url2)
+  visit4 = Visit.record_visit!(frankie, short_url)
+  visit5 = Visit.record_visit!(frankie, short_url)
+  visit3 = Visit.record_visit!(will, short_url3)
