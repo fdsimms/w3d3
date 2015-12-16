@@ -3,6 +3,7 @@ class ShortenedUrl < ActiveRecord::Base
   validates :long_url, length: { maximum: 1024 }
   validates :submitter, presence: true
   validate :user_cannot_submit_more_than_five_urls_per_minute
+  validate :non_premium_user_cannot_create_more_than_five_urls
 
   belongs_to(
     :submitter,
@@ -52,6 +53,15 @@ class ShortenedUrl < ActiveRecord::Base
     ShortenedUrl.create!(short_url: short_url, submitter_id: user.id, long_url: long_url)
   end
 
+  def self.prune
+    # ShortenedUrl.destroy_all(['created_at < (?)', 1.minutes.ago])
+    urls_and_users = ShortenedUrl.joins('INNER JOIN users ON shortened_urls.submitter_id = users.id')
+
+    urls_and_users
+      .where('shortened_urls.created_at < (?) AND users.premium = (?)', 1.minutes.ago, 'f')
+      .destroy_all
+  end
+
   def num_clicks
     visits.count
   end
@@ -73,6 +83,15 @@ class ShortenedUrl < ActiveRecord::Base
 
       if recent_subs >= 5
         errors[:base] << "can't submit more than five urls per minute"
+      end
+    end
+
+    def non_premium_user_cannot_create_more_than_five_urls
+      user = User.find(self.submitter_id)
+      submitted_urls_count = user.submitted_urls.count
+
+      if submitted_urls_count >= 5 && !user.premium
+        errors[:base] << "non-premium users can't submit more than 5 urls"
       end
     end
 end

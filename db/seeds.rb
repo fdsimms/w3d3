@@ -8,7 +8,7 @@
 
   User.destroy_all
   will = User.create!(email: "will@will.com")
-  frankie = User.create!(email: "frankie@frankie.com")
+  frankie = User.create!(email: "frankie@frankie.com", premium: true)
 
   ShortenedUrl.destroy_all
   short_url = ShortenedUrl.create_for_user_and_long_url!(will, "google.com")
