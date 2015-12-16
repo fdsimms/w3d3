@@ -1,7 +1,8 @@
 class ShortenedUrl < ActiveRecord::Base
-  validates :short_url, presence: true, uniqueness: true
-  validates :long_url, presence: true, uniqueness: true
-  validates :submitter_id, presence: true
+  validates :short_url, :long_url, presence: true, uniqueness: true
+  validates :long_url, length: { maximum: 1024 }
+  validates :submitter, presence: true
+  validate :user_cannot_submit_more_than_five_urls_per_minute
 
   belongs_to(
     :submitter,
@@ -63,4 +64,15 @@ class ShortenedUrl < ActiveRecord::Base
     time_range = (10.minutes.ago..Time.now)
     visitors.where('created_at' => time_range).count
   end
+
+  private
+    def user_cannot_submit_more_than_five_urls_per_minute
+      submitted_urls = User.find(self.submitter_id).submitted_urls
+      time_range = (1.minute.ago..Time.now)
+      recent_subs = submitted_urls.where('created_at' => time_range).count
+
+      if recent_subs >= 5
+        errors[:base] << "can't submit more than five urls per minute"
+      end
+    end
 end

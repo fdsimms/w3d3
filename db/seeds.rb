@@ -12,8 +12,12 @@
 
   ShortenedUrl.destroy_all
   short_url = ShortenedUrl.create_for_user_and_long_url!(will, "google.com")
-  short_url2 = ShortenedUrl.create_for_user_and_long_url!(frankie, "apple.com")
+  short_url2 = ShortenedUrl.create_for_user_and_long_url!(will, "apple.com")
   short_url3 = ShortenedUrl.create_for_user_and_long_url!(frankie, "yahoo.com")
+  short_url4 = ShortenedUrl.create_for_user_and_long_url!(frankie, "bing.com")
+  short_url5 = ShortenedUrl.create_for_user_and_long_url!(frankie, "appacademy.io")
+  short_url6 = ShortenedUrl.create_for_user_and_long_url!(frankie, "amazon.com")
+  short_url7 = ShortenedUrl.create_for_user_and_long_url!(frankie, "netflix.com")
   # short_url4 = ShortenedUrl.create_for_user_and_long_url!(will, "apple.com")
 
   Visit.destroy_all
