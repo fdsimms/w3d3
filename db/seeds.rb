@@ -22,3 +22,15 @@
   visit4 = Visit.record_visit!(frankie, short_url)
   visit5 = Visit.record_visit!(frankie, short_url)
   visit3 = Visit.record_visit!(will, short_url3)
+
+  TagTopic.destroy_all
+  tag1 = TagTopic.create!(topic: "birds")
+  tag2 = TagTopic.create!(topic: "flowers")
+  tag3 = TagTopic.create!(topic: "ruby")
+
+  Tagging.destroy_all
+  tagging1 = Tagging.create!(tag_topic_id: tag1.id, url_id: short_url.id)
+  tagging2 = Tagging.create!(tag_topic_id: tag2.id, url_id: short_url2.id)
+  tagging3 = Tagging.create!(tag_topic_id: tag3.id, url_id: short_url3.id)
+  tagging4 = Tagging.create!(tag_topic_id: tag3.id, url_id: short_url2.id)
+  tagging5 = Tagging.create!(tag_topic_id: tag3.id, url_id: short_url.id)
